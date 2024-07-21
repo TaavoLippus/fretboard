@@ -1,6 +1,7 @@
 from random import randint
 from tkinter import *
 from tkinter import ttk
+import time
 
 #variaabled
 noodid_sharp = ["E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#"]
@@ -13,6 +14,7 @@ keeled = {"E":0, "A":5, "D":10, "G":15, "B":19, "e":24}
 
 
 def render():
+    print("render calliti")
     root = Tk()
     root.title("fretboard thingy")
     mainframe = ttk.Frame(root, padding="3 3 12 12")
@@ -27,44 +29,61 @@ def render():
     mainframe.rowconfigure(1, weight=1)
     mainframe.rowconfigure(2, weight=1)
 
-    global keel_ja_fret, õige_noot_sharp, õige_noot_flat 
-    keeled_list = list(keeled.keys())
-    random_keel = keeled_list[randint(0,5)]
-    random_fret = randint(1, 12)
-    keel_ja_fret = f"{random_keel}{random_fret}"
+    def guesser():
+        
+        for widget in mainframe.winfo_children():
+            widget.destroy()
 
-    pitch = keeled[f"{random_keel}"] + random_fret
-    õige_noot_sharp = noodid_sharp[pitch%12]
-    õige_noot_flat = noodid_flat[pitch%12]
+        print("guesser calliti")
+        global keel_ja_fret, õige_noot_sharp, õige_noot_flat 
+        keeled_list = list(keeled.keys())
+        random_keel = keeled_list[randint(0,5)]
+        random_fret = randint(1, 12)
+        keel_ja_fret = f"{random_keel}{random_fret}"
 
-    #Label1 (noot+fret)
-    ttk.Label(mainframe, text=keel_ja_fret, font = (('Helvetica', 24, 'bold'))).grid(column=1, row=0)
+        pitch = keeled[f"{random_keel}"] + random_fret
+        õige_noot_sharp = noodid_sharp[pitch%12]
+        õige_noot_flat = noodid_flat[pitch%12]
 
-    #vvastus
-    vastus = StringVar()
-    vastus_entry = ttk.Entry(mainframe, width=10, textvariable=vastus)
-    vastus_entry.grid(column=1, row= 1)
+        #Label1 (noot+fret)
+        ttk.Label(mainframe, text=keel_ja_fret, font = (('Helvetica', 24, 'bold'))).grid(column=1, row=0)
+
+        #vvastus
+        vastus = StringVar()
+        vastus_entry = ttk.Entry(mainframe, width=10, textvariable=vastus)
+        vastus_entry.grid(column=1, row= 1)
 
 
-    #check
-    result = StringVar()
-    ttk.Label(mainframe, width=10, textvariable=result).grid(column=1, row=2)
-    
-    def check(*args):
-        print(f"{õige_noot_sharp}")
-        vastus_väärtus = vastus.get()
-        print(f"{vastus_väärtus}")
-        if vastus_väärtus == õige_noot_flat or vastus_väärtus == õige_noot_sharp:
-            result.set(":D")
-        else:
-            result.set("D:")
-    
+        #check
+        result = StringVar()
+        ttk.Label(mainframe, width=10, textvariable=result).grid(column=1, row=2)
+        
+        def check(*args):
+            result.set("")
+            print(f"{õige_noot_sharp}")
+            vastus_väärtus = vastus.get()
+            print(f"{vastus_väärtus}")
+            if vastus_väärtus == õige_noot_flat or vastus_väärtus == õige_noot_sharp:
+                print("õige vastus")
+                result.set(":D")
+                root.update_idletasks()
 
-    root.bind("<Return>", check)
+                time.sleep(2)
+                guesser()
 
-    #render
+            else:
+                result.set("D:")
+                root.update_idletasks()
+
+        
+        root.bind("<Return>", check)
+        
     root.minsize(400,400)
+
+    guesser()
     root.mainloop()
+
+
 
 
 def main():
