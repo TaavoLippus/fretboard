@@ -47,22 +47,23 @@ def render():
 
 
     #check
+    result = StringVar()
+    ttk.Label(mainframe, width=10, textvariable=result).grid(column=1, row=2)
+    
     def check(*args):
         print(f"{õige_noot_sharp}")
         vastus_väärtus = vastus.get()
         print(f"{vastus_väärtus}")
         if vastus_väärtus == õige_noot_flat or vastus_väärtus == õige_noot_sharp:
-            result = ":D"
+            result.set(":D")
         else:
-            result = "D:"
+            result.set("D:")
+    
 
-        ttk.Label(mainframe, width=10, text=result).grid(column=1, row=2)
-
-    ttk.Button(mainframe, text="Calculate", command=check).grid(column=3, row=3, sticky=W)
-
+    root.bind("<Return>", check)
 
     #render
-    root.minsize(200,200)
+    root.minsize(400,400)
     root.mainloop()
 
 
