@@ -4,8 +4,10 @@ from tkinter import ttk
 import time
 
 #variaabled
-noodid_sharp = ["E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#"]
-noodid_flat = ["E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb"]
+noodid_sharp = ("E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#")
+noodid_flat = ("E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb")
+noodid_naturaal = ("E", "F", "G", "A", "B", "C", "D")
+
 
 keeled = {"E":0, "A":5, "D":10, "G":15, "B":19, "e":24}
 
@@ -30,10 +32,12 @@ def render():
     mainframe.rowconfigure(2, weight=1)
 
     def guesser():
-        
+
+        #clear        
         for widget in mainframe.winfo_children():
             widget.destroy()
 
+        #random generator
         print("guesser calliti")
         global keel_ja_fret, õige_noot_sharp, õige_noot_flat 
         keeled_list = list(keeled.keys())
@@ -44,6 +48,10 @@ def render():
         pitch = keeled[f"{random_keel}"] + random_fret
         õige_noot_sharp = noodid_sharp[pitch%12]
         õige_noot_flat = noodid_flat[pitch%12]
+        if õige_noot_flat in noodid_naturaal:
+            pass
+        else:
+            guesser()
 
         #Label1 (noot+fret)
         ttk.Label(mainframe, text=keel_ja_fret, font = (('Helvetica', 24, 'bold'))).grid(column=1, row=0)
@@ -52,7 +60,6 @@ def render():
         vastus = StringVar()
         vastus_entry = ttk.Entry(mainframe, width=10, textvariable=vastus)
         vastus_entry.grid(column=1, row= 1)
-
 
         #check
         result = StringVar()
@@ -73,7 +80,7 @@ def render():
 
             else:
                 result.set("D:")
-                root.update_idletasks()
+            root.update_idletasks()
 
         
         root.bind("<Return>", check)
