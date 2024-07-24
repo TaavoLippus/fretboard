@@ -17,6 +17,7 @@ viimased_5 = list()
 
 
 def render():
+    
     root = Tk()
     root.title("fretboard thingy")
     mainframe = ttk.Frame(root, padding="3 3 12 12")
@@ -38,66 +39,61 @@ def render():
         for widget in mainframe.winfo_children():
             widget.destroy()
 
-        #random generator
-        print("guesser calliti")
-        global keel_ja_fret, õige_noot_sharp, õige_noot_flat 
-        keeled_list = list(keeled.keys())
-        random_keel = keeled_list[randint(0,5)]
-        random_fret = randint(1, 12)
-        keel_ja_fret = f"{random_keel}{random_fret}"
+        def generate_note():
+            global keel_ja_fret, õige_noot_sharp, õige_noot_flat
+            keeled_list = list(keeled.keys())
+            random_keel = keeled_list[randint(0, 5)]
+            random_fret = randint(1, 12)
+            keel_ja_fret = f"{random_keel}{random_fret}"
 
-        pitch = keeled[f"{random_keel}"] + random_fret
-        õige_noot_sharp = noodid_sharp[pitch%12]
-        õige_noot_flat = noodid_flat[pitch%12]
+            pitch = keeled[f"{random_keel}"] + random_fret
+            õige_noot_sharp = noodid_sharp[pitch % 12]
+            õige_noot_flat = noodid_flat[pitch % 12]
+            print(keel_ja_fret)
+            print(õige_noot_flat)
 
-        print(keel_ja_fret)
-        print(õige_noot_flat)
-
-
-        def duplicate_detecter():
+        def duplicate_checker():
             if keel_ja_fret in viimased_5:
                 print("duplicate detected")
-                guesser()
-        
-        #duplicate_detecter()
+                return True
+            return False
 
         def naturaal_checker():
             if õige_noot_flat in noodid_naturaal:
-                pass
-            else:
-                print("mitte naturaalne")
-                guesser()
-
-        naturaal_checker()
+                return True
+            return False
 
         def appender():
             print("appender calliti")
             viimased_5.append(keel_ja_fret)
-            if len(viimased_5)>5:
+            if len(viimased_5) > 5:
                 viimased_5.pop(0)
             print(viimased_5)
-        
+
+        while True:
+            generate_note()
+            if not duplicate_checker() and naturaal_checker():
+                break
+
         appender()
 
-
-
         #Label1 (noot+fret)
-        ttk.Label(mainframe, text=keel_ja_fret, font = (('Helvetica', 24, 'bold'))).grid(column=1, row=0)
+        ttk.Label(mainframe, text=keel_ja_fret, font=(('Helvetica', 24, 'bold'))).grid(column=1, row=0)
 
         #vvastus
         vastus = StringVar()
-        vastus_entry = ttk.Entry(mainframe, width=10, textvariable=vastus, font = (('Helvetica', 24, 'bold')))
-        vastus_entry.grid(column=1, row= 1)
+        vastus_entry = ttk.Entry(mainframe, width=10, textvariable=vastus, font=(('Helvetica', 24, 'bold')))
+        vastus_entry.grid(column=1, row=1)
         vastus_entry.focus_set()
 
         #check
         result = StringVar()
-        ttk.Label(mainframe, textvariable=result, font = (('Helvetica', 24, 'bold'))).grid(column=1, row=2)
-        
+        ttk.Label(mainframe, textvariable=result, font=(('Helvetica', 24, 'bold'))).grid(column=1, row=2)
+
         def check(*args):
             result.set("")
             vastus_väärtus = vastus.get()
-            print(f"Vastus:{vastus_väärtus}")
+            print(f"Vastus: {vastus_väärtus}")
             if vastus_väärtus == õige_noot_flat or vastus_väärtus == õige_noot_sharp:
                 print("õige vastus")
                 result.set(":D")
@@ -105,7 +101,6 @@ def render():
 
                 time.sleep(1)
                 guesser()
-
             else:
                 print("vale vastus")
                 result.set("D:")
