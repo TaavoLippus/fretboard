@@ -1,46 +1,47 @@
 from tkinter import *
 from tkinter import ttk
 
-root = Tk()
-root.title("FEET")
-
-#funktsioon
-def calculate(*args):
-    try:
-        value = float(feet.get())
-        meters.set(int(0.3048 * value * 10000.0 + 0.5)/10000.0)
-    except ValueError:
-        pass
-
 #setup
+root = Tk()
+root.title("tkinter_test")
+mainframe = ttk.Frame(root, padding=(3, 3, 12, 12))
+mainframe.pack(fill="both", expand=True)
 
-mainframe = ttk.Frame(root, padding="3 3 12 12")
-mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
-root.columnconfigure(0, weight=1)
-root.rowconfigure(0, weight=1)
+#grid configure
+rows = 8
+columns = 4
+for row in range(rows):
+    mainframe.rowconfigure(row, weight=10)
+for column in range(columns):
+    mainframe.columnconfigure(column, weight =10)
 
-#feet input
-feet = StringVar()
-feet_entry = ttk.Entry(mainframe, width=7, textvariable=feet)
-feet_entry.grid(column=2, row=1, sticky=(W, E))
+#grid pattern
+for row in range(rows):
+    for column in range(columns):
+        print(f"row={row}, column={column}")
+        if (column+row)%2 != 0:
+            print("red")
+            ttk.Label(mainframe, text="TEST", background='red').grid(row=row, column=column, sticky='NSEW')
+        else:
+            print("blue")
+            ttk.Label(mainframe, text="TEST", background='blue').grid(row=row, column=column, sticky='NSEW')
 
-#output
-meters = StringVar()
-ttk.Label(mainframe, textvariable=meters).grid(column=2, row=2, sticky=(W, E))
 
-#button
-ttk.Button(mainframe, text="Calculate", command=calculate).grid(column=3, row=3, sticky=W)
+#prompt label
+prompt = ttk.Label(mainframe, text="PROMPT", background='white')
+prompt.grid(row=0, column=1, columnspan=2, sticky='NSEW')
+prompt.configure(anchor='center')
 
-#muu tekst
-ttk.Label(mainframe, text="feet").grid(column=3, row=1, sticky=W)
-ttk.Label(mainframe, text="is equivalent to").grid(column=1, row=2, sticky=E)
-ttk.Label(mainframe, text="meters").grid(column=3, row=2, sticky=W)
+#buttonid
+button_E = ttk.Button(mainframe, text="E").grid(row=2, column=0)
+button_A = ttk.Button(mainframe, text="A").grid(row=2, column=1)
+button_D = ttk.Button(mainframe, text="D").grid(row=2, column=2)
+button_G = ttk.Button(mainframe, text="G").grid(row=2, column=3)
+button_B = ttk.Button(mainframe, text="B").grid(row=3, column=0, columnspan=2)
+button_C = ttk.Button(mainframe, text="C").grid(row=3, column=1, columnspan=2)
+button_F = ttk.Button(mainframe, text="F").grid(row=3, column=2, columnspan=2)
 
-#polish
-for child in mainframe.winfo_children(): 
-    child.grid_configure(padx=5, pady=5)
-feet_entry.focus()
-root.bind("<Return>", calculate)
+#placement
 
-root.minsize(200, 200)
+root.minsize(400,400)
 root.mainloop()

@@ -25,12 +25,12 @@ def render():
     root.columnconfigure(0, weight=1)
     root.rowconfigure(0, weight=1)
 
-    mainframe.columnconfigure(0, weight=1)
-    mainframe.columnconfigure(1, weight=1)
-    mainframe.columnconfigure(2, weight=1)
-    mainframe.rowconfigure(0, weight=1)
-    mainframe.rowconfigure(1, weight=1)
-    mainframe.rowconfigure(2, weight=1)
+    rows = 8
+    columns = 4
+    for row in range(rows):
+        mainframe.rowconfigure(row, weight=10)
+    for column in range(columns):
+        mainframe.columnconfigure(column, weight =10)
 
 
     def guesser():
@@ -78,17 +78,24 @@ def render():
         appender()
 
         #Label1 (noot+fret)
-        ttk.Label(mainframe, text=keel_ja_fret, font=(('Helvetica', 24, 'bold'))).grid(column=1, row=0)
+        prompt = ttk.Label(mainframe, text=keel_ja_fret, font=(('Helvetica', 24, 'bold')))
+        prompt.grid(row=0, column=1, columnspan=2, sticky='NSEW')
+        prompt.configure(anchor='center')
 
         #vvastus
         vastus = StringVar()
-        vastus_entry = ttk.Entry(mainframe, width=10, textvariable=vastus, font=(('Helvetica', 24, 'bold')))
-        vastus_entry.grid(column=1, row=1)
-        vastus_entry.focus_set()
+        button_E = ttk.Button(mainframe, text="E", command=lambda: [vastus.set("E"), check()]).grid(row=2, column=0)
+        button_A = ttk.Button(mainframe, text="A", command=lambda: [vastus.set("A"), check()]).grid(row=2, column=1)
+        button_D = ttk.Button(mainframe, text="D", command=lambda: [vastus.set("D"), check()]).grid(row=2, column=2)
+        button_G = ttk.Button(mainframe, text="G", command=lambda: [vastus.set("G"), check()]).grid(row=2, column=3)
+        button_B = ttk.Button(mainframe, text="B", command=lambda: [vastus.set("B"), check()]).grid(row=3, column=0, columnspan=2)
+        button_C = ttk.Button(mainframe, text="C", command=lambda: [vastus.set("C"), check()]).grid(row=3, column=1, columnspan=2)
+        button_F = ttk.Button(mainframe, text="F", command=lambda: [vastus.set("F"), check()]).grid(row=3, column=2, columnspan=2)
 
         #check
         result = StringVar()
-        ttk.Label(mainframe, textvariable=result, font=(('Helvetica', 24, 'bold'))).grid(column=1, row=2)
+        result.set("-_-")
+        ttk.Label(mainframe, textvariable=result, font=(('Helvetica', 24, 'bold'))).grid(column=1, row=5, columnspan=2)
 
         def check(*args):
             result.set("")
